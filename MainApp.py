@@ -1,5 +1,3 @@
-from sqlalchemy import create_engine
-import numpy as np
 from Domain import Preference, User, Item
 
 csv_delim=','
@@ -25,12 +23,16 @@ def main():
 
 def jaccard_sim():
     preference=Preference()
+    df_cleansed_pref=preference.get_cleansed_df(prefs_csv_file_path,csv_delim)
+    print(df_cleansed_pref)
+
     user=User()
+    df_cleansed_user=user.get_cleansed_df(users_csv_file_path,csv_delim)
+    print(df_cleansed_user)
+
     item=Item()
-    pref_df=preference.get_df(prefs_csv_file_path,csv_delim)
-    user_df=user.get_df(users_csv_file_path,csv_delim)
-    item_df=item.get_df(items_csv_file_path,csv_delim)
-    print(item_df)
+    df_cleansed_item=item.get_cleansed_df(items_csv_file_path,csv_delim)
+    print(df_cleansed_item)
 
 if __name__ == '__main__':
     main()

@@ -2,53 +2,46 @@ import pandas as pd
 import sqlalchemy
 import numpy as np
 
+from DAO import DAO
 
 
-class Preference:
-    # def __init__(self, engine, csv_file_path):
-    #     return 1
-    def get_df(self,file_path,delim):
-        df=pd.read_csv(filepath_or_buffer=file_path,delimiter=delim)
-        return self.cleanse_df(df)
-
-    def get_df_sql(self,engine,table_name):
-        sql="""select * from {}""".format(table_name)
-        df=pd.read_sql_query(sqlalchemy.text(sql), con=engine)
-        return df
-
+class Preference(DAO):
     def cleanse_df(self,df):
-        df1 = df.dropna()[(pd.to_numeric(df.user_id, errors='coerce').notnull()) & (pd.to_numeric(df['item_id'], errors='coerce').notnull())]
-        df1.user_id=df1.user_id.astype(int)
-        df1.item_id=df1.item_id.astype(int)
-        return df1
+        df_dropped_nan=df.dropna(axis=0,how='any')[df.item_id!='1']
+        df1=df_dropped_nan[df_dropped_nan.user_id.apply(lambda x: x.isnumeric())]
+        df2 = df1[df1.item_id.apply(lambda x: x.isnumeric())]
+        df2.item_id = df2.item_id.astype(int)
+        df2.user_id=df2.user_id.astype(int).copy()
+        return df2
+    def get_cleansed_df(self,file_path,delim):
+        df=DAO.get_df(self,file_path,delim)
+        cleansed_df=self.cleanse_df(df)
+        return cleansed_df
 
 
-class User:
-    def get_df(self, file_path, delim):
-        df = pd.read_csv(filepath_or_buffer=file_path, delimiter=delim)
-        return self.cleanse_df(df)
-
-    def get_df_sql(self, engine, table_name):
-        sql = """select * from {}""".format(table_name)
-        df = pd.read_sql_query(sqlalchemy.text(sql), con=engine)
-        return df
+class User(DAO):
     def cleanse_df(self, df):
-        df1= df.dropna()[(pd.to_numeric(df.user_id, errors='coerce').notnull()) & (df.name.str.contains("\D+"))]
-        df1.user_id=df1.user_id.astype(int)
-        return df1
+        df_dropped_nan = df.dropna(axis=0, how='any')
+        df1 = df_dropped_nan[df_dropped_nan.user_id.apply(lambda x: x.isnumeric())]
+        df1.name= df1.name.str.replace("\d+",'')
+        df2=df1[df1.name!='']
+        df2.user_id=df2.user_id.astype(int)
+        return df2
+    def get_cleansed_df(self,file_path,delim):
+        df=DAO.get_df(self,file_path,delim)
+        cleansed_df=self.cleanse_df(df)
+        return cleansed_df
 
-
-class Item:
-    def get_df(self, file_path, delim):
-        df = pd.read_csv(filepath_or_buffer=file_path, delimiter=delim)
-        return self.cleanse_df(df)
-
-    def get_df_sql(self, engine, table_name):
-        sql = """select * from {}""".format(table_name)
-        df = pd.read_sql_query(sqlalchemy.text(sql), con=engine)
-        return df
-
+class Item(DAO):
     def cleanse_df(self, df):
-        df1 = df.dropna()[(pd.to_numeric(df.item_id, errors='coerce').notnull()) & (df.item_name.str.contains("\D+"))]
-        df1.item_id = df1.item_id.astype(int)
-        return df1
+        df_dropped_nan = df.dropna(axis=0, how='any')
+        df1 = df_dropped_nan[df_dropped_nan.item_id.apply(lambda x: x.isnumeric())]
+        df1.item_name = df1.item_name.str.replace("\d+", '')
+        df2 = df1[df1.item_name != '']
+        df2.item_id = df2.item_id.astype(int)
+        return df2
+
+    def get_cleansed_df(self,file_path,delim):
+        df=DAO.get_df(self,file_path,delim)
+        cleansed_df=self.cleanse_df(df)
+        return cleansed_df
