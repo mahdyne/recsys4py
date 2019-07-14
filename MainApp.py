@@ -1,5 +1,5 @@
 from Domain import Preference, User, Item
-
+from SimilarityMeasure import *
 csv_delim=','
 prefs_csv_file_path='/home/m-nematpour/wd/ws/python/recsys/preferences.csv'
 users_csv_file_path='/home/m-nematpour/wd/ws/python/recsys/users.csv'
@@ -24,15 +24,9 @@ def main():
 def jaccard_sim():
     preference=Preference()
     df_cleansed_pref=preference.get_cleansed_df(prefs_csv_file_path,csv_delim)
-    print(df_cleansed_pref)
+    jaccard_sim=JaccardSim(df_cleansed_pref).calcSim()
+    print(jaccard_sim)
 
-    user=User()
-    df_cleansed_user=user.get_cleansed_df(users_csv_file_path,csv_delim)
-    print(df_cleansed_user)
-
-    item=Item()
-    df_cleansed_item=item.get_cleansed_df(items_csv_file_path,csv_delim)
-    print(df_cleansed_item)
 
 if __name__ == '__main__':
     main()
