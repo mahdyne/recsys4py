@@ -1,4 +1,4 @@
-# recsys
+# rec4py
 # What?
 This is just a recommender application which takes in a preferencecs CSV file and predicts ratings using various similarity measures.
 # Why?
