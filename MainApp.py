@@ -1,9 +1,9 @@
 from Domain import Preference, User, Item
 from SimilarityMeasure import *
 csv_delim=','
-prefs_csv_file_path='/home/m-nematpour/wd/ws/python/recsys/preferences.csv'
-users_csv_file_path='/home/m-nematpour/wd/ws/python/recsys/users.csv'
-items_csv_file_path='/home/m-nematpour/wd/ws/python/recsys/items.csv'
+prefs_csv_file_path='preferences.csv'
+users_csv_file_path='users.csv'
+items_csv_file_path='items.csv'
 
 prefs_db_table_name='preferences'
 users_db_table_name='users'
