@@ -1,4 +1,5 @@
 from Domain import Preference, User, Item
+from Recommendation import *
 from SimilarityMeasure import *
 csv_delim=','
 prefs_csv_file_path='preferences.csv'
@@ -19,13 +20,17 @@ connection_url = 'postgresql://{}:{}@{}:{}/{}'.format(user, password, host, port
 #engine = create_engine(connection_url)
 
 def main():
-    jaccard_sim()
+    gen_rec()
 
-def jaccard_sim():
+def gen_rec():
     preference=Preference()
     df_cleansed_pref=preference.get_cleansed_df(prefs_csv_file_path,csv_delim)
     jaccard_sim=SimilarityMeasure(df_cleansed_pref).jaccardSim()
     print(jaccard_sim)
+    rec=Recommendation(df_cleansed_pref,jaccard_sim)
+    df_rec=rec.gen_k_rec()
+    print(df_rec)
+
 
 
 if __name__ == '__main__':
