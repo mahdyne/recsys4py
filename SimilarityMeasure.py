@@ -1,9 +1,8 @@
 import pandas as pd
-class JaccardSim:
+class SimilarityMeasure:
     def __init__(self,df_preferences):
         self.df_preferences = df_preferences
-
-    def calcSim(self):
+    def jaccardSim(self):
         df_user_pref_count=self.df_preferences.groupby('user_id').count().reset_index().rename(columns={'item_id':'pref_count'})
         df_user_intersection=pd.merge(self.df_preferences,self.df_preferences,left_on=['item_id'],right_on=['item_id'])
         df_users_intersection_asym=df_user_intersection[df_user_intersection.user_id_x<df_user_intersection.user_id_y]
@@ -13,7 +12,3 @@ class JaccardSim:
         df_user_x_y['jaccard_sim']=(df_user_x_y['intersection_count']*1.0)/(df_user_x_y['pref_count_user_x']+df_user_x_y['pref_count_user_y']-df_user_x_y['intersection_count'])
         df_jaccard_sim=df_user_x_y[['user_id_x','user_id_y','jaccard_sim']]
         return df_jaccard_sim
-
-class CorrSim:
-    def __init__(self,df_ranked_preferences):
-        self.df_ranked_preferences = df_ranked_preferences
