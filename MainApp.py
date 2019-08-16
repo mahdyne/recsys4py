@@ -24,7 +24,7 @@ def main():
 def jaccard_sim():
     preference=Preference()
     df_cleansed_pref=preference.get_cleansed_df(prefs_csv_file_path,csv_delim)
-    jaccard_sim=JaccardSim(df_cleansed_pref).calcSim()
+    jaccard_sim=SimilarityMeasure(df_cleansed_pref).jaccardSim()
     print(jaccard_sim)
 
 
